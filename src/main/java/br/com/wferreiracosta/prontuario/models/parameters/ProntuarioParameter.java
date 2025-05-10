@@ -2,6 +2,7 @@ package br.com.wferreiracosta.prontuario.models.parameters;
 
 public record ProntuarioParameter(
         String filePath,
-        String gridSize
+        String delimitador,
+        Long gridSize
 ) {
 }

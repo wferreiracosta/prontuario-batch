@@ -25,7 +25,8 @@ public class ProntuarioController {
     ) {
         final var jobParameters = new JobParametersBuilder()
                 .addString("filePath", parameter.filePath())
-                .addString("gridSize", parameter.gridSize())
+                .addString("delimitador", parameter.delimitador())
+                .addLong("gridSize", parameter.gridSize())
                 .addString("xTaskToken", xTaskToken)
                 .toJobParameters();
         service.execute(jobParameters, xTaskToken);

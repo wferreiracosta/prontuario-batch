@@ -1,9 +1,12 @@
 package br.com.wferreiracosta.prontuario.readers;
 
 import br.com.wferreiracosta.prontuario.models.entities.external.ProntuarioEntity;
+import br.com.wferreiracosta.prontuario.utils.VariaveisGlobaisUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.configuration.annotation.StepScope;
-import org.springframework.batch.item.*;
+import org.springframework.batch.item.ExecutionContext;
+import org.springframework.batch.item.ItemStreamException;
+import org.springframework.batch.item.ItemStreamReader;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
@@ -19,14 +22,17 @@ public class ProntuarioReader implements ItemStreamReader<ProntuarioEntity> {
 
     private final FlatFileItemReader<ProntuarioEntity> delegate;
 
-    public ProntuarioReader(@Value("#{jobParameters['filePath']}") String filePath) {
+    public ProntuarioReader(
+            @Value("#{jobParameters['filePath']}") String filePath,
+            @Value("#{jobParameters['delimitador']}") String delimitador
+    ) {
         this.delegate = new FlatFileItemReader<>();
 
         this.delegate.setResource(new FileSystemResource(filePath));
         this.delegate.setLinesToSkip(1);
 
-        var tokenizer = new DelimitedLineTokenizer(";");
-        tokenizer.setNames("primeiro_nome", "segundo_nome", "primeiro_sobrenome", "segundo_sobrenome");
+        var tokenizer = new DelimitedLineTokenizer(delimitador);
+        tokenizer.setNames(VariaveisGlobaisUtil.header);
 
         var fieldSetMapper = new BeanWrapperFieldSetMapper<ProntuarioEntity>();
         fieldSetMapper.setTargetType(ProntuarioEntity.class);
