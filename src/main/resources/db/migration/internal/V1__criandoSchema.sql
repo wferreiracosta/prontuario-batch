@@ -1,0 +1,3 @@
+-- DROP SCHEMA controle;
+
+CREATE SCHEMA IF NOT EXISTS controle;

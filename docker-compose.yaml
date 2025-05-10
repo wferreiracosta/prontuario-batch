@@ -1,21 +1,37 @@
 version: '3'
 
 volumes:
-  data:
+  data1:
+  data2:
 
 services:
 
-  postgres:
-    container_name: prontuario-java-batch-postgres
+  postgres-internal:
+    container_name: prontuario-java-batch-postgres-internal
     image: postgres
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
-      POSTGRES_DB: prontuariodb
+      POSTGRES_DB: internal-prontuariodb
     ports:
       - 5432:5432
     volumes:
-      - data:/var/lib/postgresql
+      - data1:/var/lib/postgresql
+    networks:
+      - global-default
+
+  postgres-external:
+    container_name: prontuario-java-batch-postgres-external
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: external-prontuariodb
+    ports:
+      - 5433:5432
+    volumes:
+      - data2:/var/lib/postgresql
+      - ./src/main/resources/db/migration/external/criarTabelasProntuario.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - global-default
 
