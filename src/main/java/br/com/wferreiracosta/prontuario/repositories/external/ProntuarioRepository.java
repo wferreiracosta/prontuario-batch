@@ -4,4 +4,5 @@ import br.com.wferreiracosta.prontuario.models.entities.external.ProntuarioEntit
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ProntuarioRepository extends JpaRepository<ProntuarioEntity, Long> {
+
 }

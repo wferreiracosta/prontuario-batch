@@ -1,6 +1,7 @@
 package br.com.wferreiracosta.prontuario.steps;
 
 import br.com.wferreiracosta.prontuario.listeners.ProntuarioStepListener;
+import br.com.wferreiracosta.prontuario.models.ProntuarioData;
 import br.com.wferreiracosta.prontuario.models.entities.external.ProntuarioEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,13 +27,13 @@ public class ProntuarioStepConfig {
     public Step prontuarioStep(
             JobRepository jobRepository,
             PlatformTransactionManager transactionManager,
-            ItemReader<ProntuarioEntity> reader,
-            ItemProcessor<ProntuarioEntity, ProntuarioEntity> processor,
+            ItemReader<ProntuarioData> reader,
+            ItemProcessor<ProntuarioData, ProntuarioEntity> processor,
             ItemWriter<ProntuarioEntity> writer,
             @Value("#{jobParameters['gridSize']}") Integer gridSize
     ) {
         return new StepBuilder("prontuarioStep", jobRepository)
-                .<ProntuarioEntity, ProntuarioEntity>chunk(gridSize, transactionManager)
+                .<ProntuarioData, ProntuarioEntity>chunk(gridSize, transactionManager)
                 .listener(new ProntuarioStepListener())
                 .reader(reader)
                 .processor(processor)

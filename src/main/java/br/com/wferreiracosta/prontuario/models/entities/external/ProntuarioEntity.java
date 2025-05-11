@@ -3,6 +3,7 @@ package br.com.wferreiracosta.prontuario.models.entities.external;
 import jakarta.persistence.*;
 import lombok.*;
 
+import static jakarta.persistence.CascadeType.ALL;
 import static jakarta.persistence.GenerationType.SEQUENCE;
 
 @Getter
@@ -37,7 +38,14 @@ public class ProntuarioEntity {
     @Column(name = "SEGUNDO_SOBRENOME")
     private String segundoSobrenome;
 
-    @Column(name = "NOME_COMPLETO")
-    private String nomeCompleto;
+    @Column(name = "ENDERECO_COMPLETO")
+    private String enderecoCompleto;
+
+    @OneToOne(mappedBy = "prontuario", cascade = ALL)
+    private EnderecoEntity endereco;
+
+    @OneToOne
+    @JoinColumn(name = "ENDERECO_ID", referencedColumnName = "ID")
+    private EnderecoEntity endereco2;
 
 }

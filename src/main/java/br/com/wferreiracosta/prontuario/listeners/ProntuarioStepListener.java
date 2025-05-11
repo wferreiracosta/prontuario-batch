@@ -1,6 +1,5 @@
 package br.com.wferreiracosta.prontuario.listeners;
 
-import br.com.wferreiracosta.prontuario.utils.VariaveisGlobaisUtil;
 import com.opencsv.CSVReaderBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.ExitStatus;
@@ -10,16 +9,28 @@ import org.springframework.batch.core.StepExecutionListener;
 import java.io.FileReader;
 import java.io.IOException;
 
+import static br.com.wferreiracosta.prontuario.utils.VariaveisGlobaisUtil.*;
+
 @Slf4j
 public class ProntuarioStepListener implements StepExecutionListener {
 
     @Override
     public void beforeStep(StepExecution stepExecution) {
         try {
-            final var filePath = stepExecution.getJobParameters().getString("filePath");
-            final var filereader = new FileReader(filePath);
+            final var filereader = new FileReader(stepExecution.getJobParameters().getString("filePath"));
             final var csvReader = new CSVReaderBuilder(filereader).build();
-            VariaveisGlobaisUtil.header = csvReader.readNext()[0].split(";");
+
+            HEADER = csvReader.readNext()[0].split(
+                    stepExecution.getJobParameters().getString("delimitador")
+            );
+
+            for (String header : HEADER) {
+                if (COLUNAS_ENDERECO.contains(header.toUpperCase())) {
+                    TEM_ENDERECO = true;
+                    break;
+                }
+            }
+
             csvReader.close();
             filereader.close();
         } catch (final IOException e) {

@@ -1,6 +1,6 @@
 package br.com.wferreiracosta.prontuario.readers;
 
-import br.com.wferreiracosta.prontuario.models.entities.external.ProntuarioEntity;
+import br.com.wferreiracosta.prontuario.models.ProntuarioData;
 import br.com.wferreiracosta.prontuario.utils.VariaveisGlobaisUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.configuration.annotation.StepScope;
@@ -18,9 +18,9 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @StepScope
 @Component
-public class ProntuarioReader implements ItemStreamReader<ProntuarioEntity> {
+public class ProntuarioReader implements ItemStreamReader<ProntuarioData> {
 
-    private final FlatFileItemReader<ProntuarioEntity> delegate;
+    private final FlatFileItemReader<ProntuarioData> delegate;
 
     public ProntuarioReader(
             @Value("#{jobParameters['filePath']}") String filePath,
@@ -32,12 +32,12 @@ public class ProntuarioReader implements ItemStreamReader<ProntuarioEntity> {
         this.delegate.setLinesToSkip(1);
 
         var tokenizer = new DelimitedLineTokenizer(delimitador);
-        tokenizer.setNames(VariaveisGlobaisUtil.header);
+        tokenizer.setNames(VariaveisGlobaisUtil.HEADER);
 
-        var fieldSetMapper = new BeanWrapperFieldSetMapper<ProntuarioEntity>();
-        fieldSetMapper.setTargetType(ProntuarioEntity.class);
+        var fieldSetMapper = new BeanWrapperFieldSetMapper<ProntuarioData>();
+        fieldSetMapper.setTargetType(ProntuarioData.class);
 
-        var lineMapper = new DefaultLineMapper<ProntuarioEntity>();
+        var lineMapper = new DefaultLineMapper<ProntuarioData>();
         lineMapper.setLineTokenizer(tokenizer);
         lineMapper.setFieldSetMapper(fieldSetMapper);
 
@@ -45,7 +45,7 @@ public class ProntuarioReader implements ItemStreamReader<ProntuarioEntity> {
     }
 
     @Override
-    public ProntuarioEntity read() throws Exception {
+    public ProntuarioData read() throws Exception {
         return delegate.read();
     }
 
