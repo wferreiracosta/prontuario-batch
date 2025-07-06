@@ -24,10 +24,10 @@ public class ProntuarioController {
             @RequestHeader(value = "X-Task-Token") final String xTaskToken
     ) {
         final var jobParameters = new JobParametersBuilder()
-                .addString("filePath", parameter.filePath())
-                .addString("delimitador", parameter.delimitador())
-                .addLong("gridSize", parameter.gridSize())
-                .addString("xTaskToken", xTaskToken)
+                .addString("filePath", parameter.filePath(), true)
+                .addString("delimitador", parameter.delimitador(), false)
+                .addLong("gridSize", parameter.gridSize(), false)
+                .addString("xTaskToken", xTaskToken, false)
                 .toJobParameters();
         service.execute(jobParameters, xTaskToken);
     }

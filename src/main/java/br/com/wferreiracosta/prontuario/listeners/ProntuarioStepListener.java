@@ -17,7 +17,11 @@ public class ProntuarioStepListener implements StepExecutionListener {
     @Override
     public void beforeStep(StepExecution stepExecution) {
         try {
-            final var filereader = new FileReader(stepExecution.getJobParameters().getString("filePath"));
+            final var filePath = stepExecution.getJobParameters().getString("filePath");
+
+            log.info("Começando step: {}", filePath);
+
+            final var filereader = new FileReader(filePath);
             final var csvReader = new CSVReaderBuilder(filereader).build();
 
             HEADER = csvReader.readNext()[0].split(
@@ -41,6 +45,7 @@ public class ProntuarioStepListener implements StepExecutionListener {
 
     @Override
     public ExitStatus afterStep(StepExecution stepExecution) {
+        log.info("Finalizando step: {}", stepExecution.getJobParameters().getString("filePath"));
         return StepExecutionListener.super.afterStep(stepExecution);
     }
 
